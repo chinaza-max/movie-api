@@ -12,18 +12,7 @@ router.get('/home',async (req, res)=>{
       console.log("LAUNCHING")
       const browser = await puppeteer.launch({
         headless: true,
-        timeout: 0,
-        ignoreHTTPSErrors: true,
-        slowMo: 0,
-        args: [
-          '--disable-gpu',
-          '--disable-dev-shm-usage',
-          '--disable-setuid-sandbox',
-          '--no-first-run',
-          '--no-sandbox',
-          '--no-zygote',
-          '--window-size=1280,720',
-        ],
+        args: ['--no-sandbox','--disable-setuid-sandbox']
       });
       const page = await browser.newPage();
       await page.setDefaultNavigationTimeout(0);
