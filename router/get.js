@@ -1,7 +1,6 @@
 import express from 'express';
 const router=express.Router();
 import  puppeteer from 'puppeteer';
-import functions from 'firebase-functions';
 let movies='';
 
 
