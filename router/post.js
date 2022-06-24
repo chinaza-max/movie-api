@@ -84,50 +84,40 @@ router.post('/api', async (req, res,) => {
 let noOfmOVIEDownloaded=0
 router.post('/downloadAPI', async (req, res,) => {
   
-  
-  let url = req.body.data  
-  
 
+  let url = req.body.data;
+  let result='';
   async function queueScraper(url) {
 
-    return queue.add(async() =>{
+    await new Promise((resolve) => {
+    queue.add(async() =>{
 
       class downloadURL{
         constructor(url){
           this.url=url
-          this.length=url.length
-          
+          this.length=url.length;
         }
+
         async  startDownload(){
               let episodeList=[]
 
           for (let i = 0; i < this.length; i++) {
+    
             const browser = await puppeteer.launch({
               headless: true,
-              timeout: 0,
-              ignoreHTTPSErrors: true,
-              slowMo: 0,
-              args: [
-                '--disable-gpu',
-                '--disable-dev-shm-usage',
-                '--disable-setuid-sandbox',
-                '--no-first-run',
-                '--no-sandbox',
-                '--no-zygote',
-                '--window-size=1280,720',
-              ],
+              args: ['--no-sandbox','--disable-setuid-sandbox']
             });
-            try{
+           // try{
               const page = await browser.newPage();
               page.setDefaultNavigationTimeout(0);
               await page.goto(this.url[i]);
-              //console.log("started2")
+          
               //await page.evaluate(() => Array.from(document.querySelectorAll('.data a'), element =>element[1].click()));
               await page.evaluate(() => document.querySelectorAll('.data a')[1].click());
               await page.waitForNavigation()
-              await page.setDefaultNavigationTimeout(0); 
-          
-              async function passRecaptcha(newPage,worker) {
+              page.setDefaultNavigationTimeout(0); 
+  
+        async function passRecaptcha(newPage,worker) {
                 const filePath =`./tesseract/langs/eng.traineddata`;
                 const filePathCopy = `eng.traineddata`;
                 const filePathCopy2 = `./router/eng.traineddata`;
@@ -140,22 +130,22 @@ router.post('/downloadAPI', async (req, res,) => {
                 await newPage.waitForSelector('body > center > form > img', { timeout: 0 })
                 const element = await newPage.$('body > center > form > img');
                 const elementScreenshot = await element.screenshot()
-          
                   await worker.load();
                   await worker.loadLanguage('eng');
                   await worker.initialize('eng');
                   scheduler.addWorker(worker);
                   const results = await scheduler.addJob('recognize',elementScreenshot)
                   const text=results.data.text
-          
                 await newPage.waitForSelector('body > center > form > input[type=text]:nth-child(8)', { timeout: 0 })
                 
                 //----------------------for clearing input field -----------------------------------------
                 await newPage.evaluate(() => {
                   const element = document.querySelector('body > center > form > input[type=text]:nth-child(8)')
                   if (element) {
+                    
                     return element.value=''
                   }
+                 
                   return 'do not exit';
                 })
                 //----------------------for clearing input field -----------------------------------------
@@ -170,47 +160,48 @@ router.post('/downloadAPI', async (req, res,) => {
                 
                   return 'do not exit';
                 })
-          
                 if('do not exit'==elementTextContent){
                   await newPage.goBack();
                   const worker2 = createWorker();
-                  passRecaptcha(newPage,worker2);
-                
+                return  passRecaptcha(newPage,worker2)
+
                 }   
                 else{  
                   await browser.close();
                   episodeList.push(elementTextContent)
-                 // console.log(elementTextContent)
+                  //console.log(elementTextContent)
                   if(episodeList.length==url.length){
                     console.log("NO of movie downloaded:=========="+ ++noOfmOVIEDownloaded +"============")
-                    console.log(episodeList)
+                    result=episodeList
+                    return resolve(episodeList);
+                     
                   }
                 }
                      
               }
               const worker = createWorker();
-              passRecaptcha(page, worker)
-
-            }catch (error) {
-              console.log(error);
+            passRecaptcha(page, worker)
+            /*}catch (error) {
+             // console.log(error);
             } 
             finally {
               if (browser) {
 
-                await browser.close();
+               // await browser.close();
               }
-            }
+            }*/
           }
         }
       }
       let users=new downloadURL(url);
-      users.startDownload();
+    users.startDownload()
     });
-  }
-  const result = await queueScraper(url);
-
+  });
+  console.log(result)
   res.status(200).json({express:result});
-
+  }
+  queueScraper(url);
+   
 })
 
 export  {router};

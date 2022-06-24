@@ -1,15 +1,14 @@
 'use strict';
 
-import http from 'http'
+import http from 'http';
 import express from 'express';
 import  cors from "cors";
-
-
-
+import createProxyMiddleware from 'http-proxy-middleware';
 const app = express();
 const server = http.createServer(app)
 const port=process.env.PORT||5000;
 app.use(cors())
+app.use('/', createProxyMiddleware({ target: 'https://polite-pony-0d1c50.netlify.app', changeOrigin: true }));
 app.use(express.json());
 app.use(express.urlencoded({extended: true }));
 
