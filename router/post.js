@@ -80,7 +80,7 @@ router.post('/downloadAPI', async (req, res,) => {
     args: ['--no-sandbox','--disable-setuid-sandbox']
   });
 
-  
+
   let url = req.body.data;
   let result=[]
 
@@ -164,12 +164,13 @@ router.post('/downloadAPI', async (req, res,) => {
 
                 }   
                 else{  
-                  await browser.close();
+                
                   episodeList.push(elementTextContent)
                   //console.log(elementTextContent)
                   if(episodeList.length==url.length){
                     console.log("NO of movie downloaded:=========="+ ++noOfmOVIEDownloaded +"============")
                     result=episodeList
+                    await browser.close();
                     return resolve(episodeList);
                      
                   }
