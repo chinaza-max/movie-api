@@ -71,26 +71,15 @@ router.post('/api', async (req, res,) => {
 
 
 let noOfmOVIEDownloaded=0
-
-router.post('/downloadAPI', async (req, res) => {
+router.post('/downloadAPI', async (req, res,) => {
   
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: ['--no-sandbox','--disable-setuid-sandbox']
-  });
-
-
   let url = req.body.data;
-  let result=[]
-
+  let result=[];
   async function queueScraper(url) {
 
     await new Promise((resolve) => {
     queue.add(async() =>{
-      const browser = await puppeteer.launch({
-        headless: true,
-        args: ['--no-sandbox','--disable-setuid-sandbox']
-      });
+
       class downloadURL{
         constructor(url){
           this.url=url
@@ -102,6 +91,10 @@ router.post('/downloadAPI', async (req, res) => {
 
           for (let i = 0; i < this.length; i++) {
     
+            const browser = await puppeteer.launch({
+              headless: true,
+              args: ['--no-sandbox','--disable-setuid-sandbox']
+            });
             try{
               const page = await browser.newPage();
               page.setDefaultNavigationTimeout(0);
@@ -162,14 +155,12 @@ router.post('/downloadAPI', async (req, res) => {
 
                 }   
                 else{  
-                  await newPage.close();
+                  await browser.close();
                   episodeList.push(elementTextContent)
-
-                  console.log(elementTextContent)
+                  //console.log(elementTextContent)
                   if(episodeList.length==url.length){
                     console.log("NO of movie downloaded:=========="+ ++noOfmOVIEDownloaded +"============")
                     result=episodeList
-                    await browser.close();
                     return resolve(episodeList);
                      
                   }
@@ -186,11 +177,10 @@ router.post('/downloadAPI', async (req, res) => {
 
                 await browser.close();
               }
-            
+            }
           }
         }
       }
-    }
       let users=new downloadURL(url);
     users.startDownload()
     });
