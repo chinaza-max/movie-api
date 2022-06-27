@@ -94,7 +94,7 @@ router.post('/downloadAPI', async (req, res,) => {
             const browser = await puppeteer.launch({
               headless: true,
               args: ['--no-sandbox','--disable-setuid-sandbox']
-            });
+            })
             try{
               const page = await browser.newPage();
               page.setDefaultNavigationTimeout(0);
