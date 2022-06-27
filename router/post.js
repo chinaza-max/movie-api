@@ -84,15 +84,14 @@ router.post('/downloadAPI', async (req, res,) => {
   let url = req.body.data;
   let result=[]
 
-
-
-
-
   async function queueScraper(url) {
 
     await new Promise((resolve) => {
     queue.add(async() =>{
-
+      const browser = await puppeteer.launch({
+        headless: true,
+        args: ['--no-sandbox','--disable-setuid-sandbox']
+      });
       class downloadURL{
         constructor(url){
           this.url=url
