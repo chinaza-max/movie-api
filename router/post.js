@@ -75,7 +75,7 @@ router.post('/downloadAPI', async (req, res,) => {
   
 
   let url = req.body.data;
-  let result='';
+  let result=[];
   async function queueScraper(url) {
 
     await new Promise((resolve) => {
@@ -96,7 +96,7 @@ router.post('/downloadAPI', async (req, res,) => {
               headless: true,
               args: ['--no-sandbox','--disable-setuid-sandbox']
             });
-           // try{
+            try{
               const page = await browser.newPage();
               page.setDefaultNavigationTimeout(0);
               await page.goto(this.url[i]);
@@ -170,15 +170,15 @@ router.post('/downloadAPI', async (req, res,) => {
               }
               const worker = createWorker();
             passRecaptcha(page, worker)
-            /*}catch (error) {
-             // console.log(error);
+            }catch (error) {
+              console.log(error);
             } 
             finally {
               if (browser) {
 
-               // await browser.close();
+                await browser.close();
               }
-            }*/
+            }
           }
         }
       }
