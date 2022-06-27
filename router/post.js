@@ -71,9 +71,8 @@ router.post('/api', async (req, res,) => {
 
 
 let noOfmOVIEDownloaded=0
-router.post('/downloadAPI', async (req, res,) => {
-  
 
+router.post('/downloadAPI', async (req, res) => {
   
   const browser = await puppeteer.launch({
     headless: true,
@@ -165,7 +164,8 @@ router.post('/downloadAPI', async (req, res,) => {
                 else{  
                   await newPage.close();
                   episodeList.push(elementTextContent)
-                  //console.log(elementTextContent)
+
+                  console.log(elementTextContent)
                   if(episodeList.length==url.length){
                     console.log("NO of movie downloaded:=========="+ ++noOfmOVIEDownloaded +"============")
                     result=episodeList
