@@ -102,7 +102,7 @@ router.post('/downloadAPI', async (req, res) => {
 
           for (let i = 0; i < this.length; i++) {
     
-           // try{
+            try{
               const page = await browser.newPage();
               page.setDefaultNavigationTimeout(0);
               await page.goto(this.url[i]);
@@ -178,7 +178,7 @@ router.post('/downloadAPI', async (req, res) => {
               }
               const worker = createWorker();
             passRecaptcha(page, worker)
-          /*  }catch (error) {
+            }catch (error) {
               console.log(error);
             } 
             finally {
@@ -186,10 +186,11 @@ router.post('/downloadAPI', async (req, res) => {
 
                 await browser.close();
               }
-            }*/
+            
           }
         }
       }
+    }
       let users=new downloadURL(url);
     users.startDownload()
     });
