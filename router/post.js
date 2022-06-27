@@ -164,7 +164,7 @@ router.post('/downloadAPI', async (req, res,) => {
 
                 }   
                 else{  
-                
+                  await newPage.close();
                   episodeList.push(elementTextContent)
                   //console.log(elementTextContent)
                   if(episodeList.length==url.length){
