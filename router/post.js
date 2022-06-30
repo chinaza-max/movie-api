@@ -77,17 +77,19 @@ const browser = await puppeteer.launch({
 
 let noOfmOVIEDownloaded=0
 router.post('/downloadAPI', async (req, res,) => {
+  
   let url = req.body.data;
 
   async function queueScraper(url) {
+    console.log("no")
     const result=[];
     await new Promise((resolve) => {
       queue.add(async() =>{
             let episodeList=[];
 
-            for (let i = 0; i < url; i++) {
+            for (let i = 0; i < url.length; i++) {
+              console.log("yeah")
               
-              try{
                 const page = await browser.newPage();
                 page.setDefaultNavigationTimeout(0);
                 await page.goto(url[i]);
@@ -160,15 +162,6 @@ router.post('/downloadAPI', async (req, res,) => {
                 }
                 const worker = createWorker();
               passRecaptcha(page, worker)
-              }catch (error) {
-                console.log(error);
-              } 
-              finally {
-                if (browser) {
-
-                  await browser.close();
-                }
-              }
             }
       });
   });
