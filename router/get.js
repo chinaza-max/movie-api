@@ -22,7 +22,7 @@ router.get('/home',async (req, res)=>{
 
       //if the page makes a  request to a resource type of image or stylesheet then abort that            request
       page.on('request', request => {
-          if (request.resourceType() === 'image' || request.resourceType() === 'stylesheet'|| req.resourceType() == 'font' )
+          if (request.resourceType === 'image' || request.resourceType === 'stylesheet'|| req.resourceType == 'font' )
               request.abort();
           else
               request.continue();

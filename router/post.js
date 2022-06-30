@@ -46,7 +46,7 @@ router.post('/api', async (req, res,) => {
     const page = await browser.newPage();
     await page.setRequestInterception(true);
     page.on('request', request => {
-      if (request.resourceType() === 'image' || request.resourceType() === 'stylesheet' || req.resourceType() == 'font' )
+      if (request.resourceType === 'image' || request.resourceType === 'stylesheet' || req.resourceType == 'font' )
           request.abort();
       else
           request.continue();
