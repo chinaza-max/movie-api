@@ -82,96 +82,95 @@ router.post('/downloadAPI', async (req, res,) => {
   async function queueScraper(url) {
     const result=[];
     await new Promise((resolve) => {
-    queue.add(async() =>{
-          let episodeList=[];
+      queue.add(async() =>{
+            let episodeList=[];
 
-          for (let i = 0; i < url; i++) {
-            
-            try{
-              const page = await browser.newPage();
-              page.setDefaultNavigationTimeout(0);
-              await page.goto(url[i]);
-          
-              //await page.evaluate(() => Array.from(document.querySelectorAll('.data a'), element =>element[1].click()));
-              await page.evaluate(() => document.querySelectorAll('.data a')[1].click());
-              await page.waitForNavigation()
-              page.setDefaultNavigationTimeout(0); 
-  
-        async function passRecaptcha(newPage,worker) {
-                const filePath =`./tesseract/langs/eng.traineddata`;
-                const filePathCopy = `eng.traineddata`;
-                const filePathCopy2 = `./router/eng.traineddata`;
-          
-                if(i==0){
-                //  newTrainData(filePath,filePathCopy,createNewtrainedData)
-                //  newTrainData(filePath,filePathCopy2,createNewtrainedData)
-                }
-                await newPage.setDefaultNavigationTimeout(0); 
-                await newPage.waitForSelector('body > center > form > img', { timeout: 0 })
-                const element = await newPage.$('body > center > form > img');
-                const elementScreenshot = await element.screenshot()
-                  await worker.load();
-                  await worker.loadLanguage('eng');
-                  await worker.initialize('eng');
-                  scheduler.addWorker(worker);
-                  const results = await scheduler.addJob('recognize',elementScreenshot)
-                  const text=results.data.text
-                await newPage.waitForSelector('body > center > form > input[type=text]:nth-child(8)', { timeout: 0 })
-                
-                //----------------------for clearing input field -----------------------------------------
-                await newPage.evaluate(() => {
-                  const element = document.querySelector('body > center > form > input[type=text]:nth-child(8)')
-                  if (element) {
-                    
-                    return element.value=''
-                  }
-                 
-                  return 'do not exit';
-                })
-                //----------------------for clearing input field -----------------------------------------
-                await newPage.type('body > center > form > input[type=text]:nth-child(8)', text, { delay: 200 });
-          
+            for (let i = 0; i < url; i++) {
               
-                const elementTextContent = await newPage.evaluate(() => {
-                  const element = document.querySelector('body > video > source')
-                  if (element) {
-                    return element.src
+              try{
+                const page = await browser.newPage();
+                page.setDefaultNavigationTimeout(0);
+                await page.goto(url[i]);
+            
+                //await page.evaluate(() => Array.from(document.querySelectorAll('.data a'), element =>element[1].click()));
+                await page.evaluate(() => document.querySelectorAll('.data a')[1].click());
+                await page.waitForNavigation()
+                page.setDefaultNavigationTimeout(0); 
+    
+          async function passRecaptcha(newPage,worker) {
+                  const filePath =`./tesseract/langs/eng.traineddata`;
+                  const filePathCopy = `eng.traineddata`;
+                  const filePathCopy2 = `./router/eng.traineddata`;
+            
+                  if(i==0){
+                  //  newTrainData(filePath,filePathCopy,createNewtrainedData)
+                  //  newTrainData(filePath,filePathCopy2,createNewtrainedData)
                   }
+                  await newPage.setDefaultNavigationTimeout(0); 
+                  await newPage.waitForSelector('body > center > form > img', { timeout: 0 })
+                  const element = await newPage.$('body > center > form > img');
+                  const elementScreenshot = await element.screenshot()
+                    await worker.load();
+                    await worker.loadLanguage('eng');
+                    await worker.initialize('eng');
+                    scheduler.addWorker(worker);
+                    const results = await scheduler.addJob('recognize',elementScreenshot)
+                    const text=results.data.text
+                  await newPage.waitForSelector('body > center > form > input[type=text]:nth-child(8)', { timeout: 0 })
+                  
+                  //----------------------for clearing input field -----------------------------------------
+                  await newPage.evaluate(() => {
+                    const element = document.querySelector('body > center > form > input[type=text]:nth-child(8)')
+                    if (element) {
+                      
+                      return element.value=''
+                    }
+                  
+                    return 'do not exit';
+                  })
+                  //----------------------for clearing input field -----------------------------------------
+                  await newPage.type('body > center > form > input[type=text]:nth-child(8)', text, { delay: 200 });
+            
                 
-                  return 'do not exit';
-                })
-                if('do not exit'==elementTextContent){
-                  await newPage.goBack();
-                  const worker2 = createWorker();
-                return  passRecaptcha(newPage,worker2)
-
-                }   
-                else{  
-                  await browser.close();
-                  episodeList.push(elementTextContent)
-                  console.log(elementTextContent)
-                  if(episodeList.length==url.length){
-                    console.log("NO of movie downloaded:=========="+ ++noOfmOVIEDownloaded +"============")
-                    result=episodeList
-                    return resolve(episodeList);
-                     
+                  const elementTextContent = await newPage.evaluate(() => {
+                    const element = document.querySelector('body > video > source')
+                    if (element) {
+                      return element.src
+                    }
+                  
+                    return 'do not exit';
+                  })
+                  if('do not exit'==elementTextContent){
+                    await newPage.goBack();
+                    const worker2 = createWorker();
+                    return  passRecaptcha(newPage,worker2)
+                  }   
+                  else{  
+                    await browser.close();
+                    episodeList.push(elementTextContent)
+                    console.log(elementTextContent)
+                    if(episodeList.length==url.length){
+                      console.log("NO of movie downloaded:=========="+ ++noOfmOVIEDownloaded +"============")
+                      result=episodeList
+                      return resolve(episodeList);
+                      
+                    }
                   }
+                      
                 }
-                     
-              }
-              const worker = createWorker();
-            passRecaptcha(page, worker)
-            }catch (error) {
-              console.log(error);
-            } 
-            finally {
-              if (browser) {
+                const worker = createWorker();
+              passRecaptcha(page, worker)
+              }catch (error) {
+                console.log(error);
+              } 
+              finally {
+                if (browser) {
 
-                await browser.close();
+                  await browser.close();
+                }
               }
             }
-          }
-    });
+      });
   });
   console.log(result)
   res.status(200).json({express:result});
