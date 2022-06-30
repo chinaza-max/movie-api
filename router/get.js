@@ -14,10 +14,23 @@ router.get('/home',async (req, res)=>{
         headless: true,
         args: ['--no-sandbox','--disable-setuid-sandbox']
       });
+
+      
       const page = await browser.newPage();
-      await page.setDefaultNavigationTimeout(0);
+
+      await page.setRequestInterception(true);
+
+      //if the page makes a  request to a resource type of image or stylesheet then abort that            request
+      page.on('request', request => {
+          if (request.resourceType() === 'image' || request.resourceType() === 'stylesheet')
+              request.abort();
+          else
+              request.continue();
+      });
+      
+     page.setDefaultNavigationTimeout(0);
       console.log("ACCESSING SITE")
-      await page.goto('https://o2tvseries.com/search/list_all_tv_series');
+      await page.goto('https://o2tvseries.com/search/list_all_tv_series')
       console.log("started")
       movies = await page.evaluate(() => Array.from(document.querySelectorAll('.data a'), element =>{
         return(

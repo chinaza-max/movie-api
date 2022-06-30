@@ -29,4 +29,9 @@ Error:
 
 https://github.com/puppeteer/puppeteer/issues/6502
 
+
+
+block request on img using 
+https://dev.to/waqasabbasi/optimizing-and-deploying-puppeteer-web-scraper-1nll
+
 */
