@@ -44,6 +44,7 @@ router.post('/api', async (req, res,) => {
   try{
    
     const page = await browser.newPage();
+    await page.setRequestInterception(true);
     page.on('request', request => {
       if (request.resourceType() === 'image' || request.resourceType() === 'stylesheet')
           request.abort();
@@ -104,6 +105,8 @@ router.post('/downloadAPI', async (req, res,) => {
             
             try{
               const page = await browser.newPage();
+
+              await page.setRequestInterception(true);
               page.on('request', request => {
                 if (request.resourceType() === 'image' || request.resourceType() === 'stylesheet')
                     request.abort();
