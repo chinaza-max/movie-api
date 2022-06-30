@@ -44,6 +44,12 @@ router.post('/api', async (req, res,) => {
   try{
    
     const page = await browser.newPage();
+    page.on('request', request => {
+      if (request.resourceType() === 'image' || request.resourceType() === 'stylesheet')
+          request.abort();
+      else
+          request.continue();
+  });
     page.setDefaultNavigationTimeout(0);
     console.log("ACCESSING SITE2")
     await page.goto(req.body.data);
@@ -98,6 +104,12 @@ router.post('/downloadAPI', async (req, res,) => {
             
             try{
               const page = await browser.newPage();
+              page.on('request', request => {
+                if (request.resourceType() === 'image' || request.resourceType() === 'stylesheet')
+                    request.abort();
+                else
+                    request.continue();
+            });
               page.setDefaultNavigationTimeout(0);
               await page.goto(this.url[i]);
           
