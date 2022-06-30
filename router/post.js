@@ -77,6 +77,7 @@ const browser = await puppeteer.launch({
 
 let noOfmOVIEDownloaded=0
 router.post('/downloadAPI', async (req, res,) => {
+  let url = req.body.data;
   
   async function queueScraper(url) {
     const result=[];
@@ -85,12 +86,12 @@ router.post('/downloadAPI', async (req, res,) => {
       
           let episodeList=[];
 
-          for (let i = 0; i < this.length; i++) {
+          for (let i = 0; i < url; i++) {
             
             try{
               const page = await browser.newPage();
               page.setDefaultNavigationTimeout(0);
-              await page.goto(this.url[i]);
+              await page.goto(url[i]);
           
               //await page.evaluate(() => Array.from(document.querySelectorAll('.data a'), element =>element[1].click()));
               await page.evaluate(() => document.querySelectorAll('.data a')[1].click());
