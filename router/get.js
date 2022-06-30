@@ -22,12 +22,12 @@ router.get('/home',async (req, res)=>{
 
       //if the page makes a  request to a resource type of image or stylesheet then abort that            request
       page.on('request', request => {
-          if (request.resourceType() === 'image' || request.resourceType() === 'stylesheet')
+          if (request.resourceType() === 'image' || request.resourceType() === 'stylesheet'|| req.resourceType() == 'font' )
               request.abort();
           else
               request.continue();
       });
-      
+
      page.setDefaultNavigationTimeout(0);
       console.log("ACCESSING SITE")
       await page.goto('https://o2tvseries.com/search/list_all_tv_series')
