@@ -78,12 +78,11 @@ const browser = await puppeteer.launch({
 let noOfmOVIEDownloaded=0
 router.post('/downloadAPI', async (req, res,) => {
   let url = req.body.data;
-  
+
   async function queueScraper(url) {
     const result=[];
     await new Promise((resolve) => {
     queue.add(async() =>{
-      
           let episodeList=[];
 
           for (let i = 0; i < url; i++) {
@@ -150,7 +149,7 @@ router.post('/downloadAPI', async (req, res,) => {
                 else{  
                   await browser.close();
                   episodeList.push(elementTextContent)
-                  //console.log(elementTextContent)
+                  console.log(elementTextContent)
                   if(episodeList.length==url.length){
                     console.log("NO of movie downloaded:=========="+ ++noOfmOVIEDownloaded +"============")
                     result=episodeList
@@ -172,8 +171,6 @@ router.post('/downloadAPI', async (req, res,) => {
               }
             }
           }
-      let users=new downloadURL(url);
-    users.startDownload()
     });
   });
   console.log(result)
