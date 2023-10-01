@@ -31,6 +31,8 @@ router.get('/home',async (req, res)=>{
           await page.goto('https://o2tvseries.com/search/list_all_tv_series');
           console.log("started")
           movies = await page.evaluate(() => Array.from(document.querySelectorAll('.data a'), element =>{
+
+            console.log(element)
             return(
               {name: element.innerText,link:element.getAttribute('href')}
             )
