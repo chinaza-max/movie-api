@@ -11,7 +11,7 @@ router.get('/home',async (req, res)=>{
       if(movies==''){
           console.log("LAUNCHING")
           const browser = await puppeteer.launch({
-            headless: false,
+            headless: true,
             args: ['--no-sandbox','--disable-setuid-sandbox']
           });
 
@@ -32,7 +32,7 @@ router.get('/home',async (req, res)=>{
           console.log("started")
           movies = await page.evaluate(() => Array.from(document.querySelectorAll('.data a'), element =>{
 
-            console.log(element)
+            console.log(document)
             return(
               {name: element.innerText,link:element.getAttribute('href')}
             )
