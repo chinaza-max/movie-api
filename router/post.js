@@ -80,8 +80,6 @@ router.post('/api', async (req, res,) => {
 
 
     await browser.close();
-
-    //res.json({ "express": movies })
     
   }
   catch (error) {

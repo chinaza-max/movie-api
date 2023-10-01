@@ -35,7 +35,7 @@ router.get('/home',async (req, res)=>{
               {name: element.innerText,link:element.getAttribute('href')}
             )
           }));
-        // console.log(movies)
+          console.log(movies)
           console.log("done done")
           console.log(movies[0])
 
