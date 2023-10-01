@@ -11,7 +11,7 @@ router.get('/home',async (req, res)=>{
       if(movies==''){
           console.log("LAUNCHING")
           const browser = await puppeteer.launch({
-            headless: true,
+            headless: false,
             args: ['--no-sandbox','--disable-setuid-sandbox']
           });
 
